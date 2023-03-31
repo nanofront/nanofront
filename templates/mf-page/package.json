@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "scripts": {
+    "debug": "nanofront debug",
+    "build": "nanofront build",
+    "start": "nanofront start"
+  },
+  "dependencies": {
+    "nanofront": "1.0.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  }
+}

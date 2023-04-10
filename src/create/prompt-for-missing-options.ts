@@ -1,6 +1,6 @@
 import inquirer from "inquirer";
 
-import type { Options, RawOptions } from "../types";
+import type { Options, CreateOptions } from "./types";
 
 // default values for unspecified args
 const defaultOptions: Options = {
@@ -17,7 +17,7 @@ const skipOptions: Omit<Options, "template"> = {
 };
 
 export async function promptForMissingOptions(
-  options: RawOptions
+  options: CreateOptions
 ): Promise<Options> {
   if (options.skipPrompts) {
     options = { ...options, ...skipOptions };

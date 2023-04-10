@@ -1,3 +1,4 @@
+import { buildProject } from "./build/main";
 import { createProject } from "./create/main";
 
 import type { Args } from "./types";
@@ -13,6 +14,7 @@ export async function cli(args: Args) {
       break;
     case "build":
       console.log("build");
+      buildProject(optionsArg);
       break;
     case "run":
       console.log("run");

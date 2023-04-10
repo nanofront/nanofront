@@ -8,7 +8,7 @@ import { copyTemplateFiles } from "./copy-template-files";
 import { initGitRepo } from "./init-git-repo";
 import { installPackages } from "./install-packages";
 
-import type { Args, Options } from "../types";
+import type { Args } from "../types";
 import { parseArgumentsIntoOptions } from "./parse-arguments-into-options";
 import { promptForMissingOptions } from "./prompt-for-missing-options";
 
@@ -24,7 +24,7 @@ export async function createProject(optionsArg: Args) {
   const templateDirectory = path.resolve(
     decodeURI(fileURLToPath(currentFileUrl)),
     "../../templates",
-    "fragment"
+    "mf-fragment"
     // options.template.toLowerCase()
   );
 

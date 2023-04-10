@@ -1,8 +1,9 @@
 import arg from "arg";
 
-import type { Args, RawOptions } from "../types";
+import type { Args } from "../types";
+import type { CreateOptions } from "./types";
 
-export function parseArgumentsIntoOptions(rawArgs: Args): RawOptions {
+export function parseArgumentsIntoOptions(rawArgs: Args): CreateOptions {
   const options = {
     "--project-name": String,
     "--git": Boolean,
@@ -15,15 +16,10 @@ export function parseArgumentsIntoOptions(rawArgs: Args): RawOptions {
     "-i": "--install",
   };
 
-  const aliases = {
-    create: "create",
-    debug: "debug",
-  };
-
   const args = arg(options, {
     argv: rawArgs.slice(2),
     permissive: false,
-    stopAtPositional: true,
+    stopAtPositional: false,
   });
 
   return {

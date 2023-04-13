@@ -1,5 +1,6 @@
 import { buildProject } from "./build/main";
 import { createProject } from "./create/main";
+import { runProject } from "./run/main";
 
 import type { Args } from "./types";
 
@@ -18,6 +19,7 @@ export async function cli(args: Args) {
       break;
     case "run":
       console.log("run");
+      runProject(optionsArg);
       break;
     default:
       console.log("not command found");

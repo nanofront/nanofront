@@ -1,18 +1,14 @@
 import * as esbuild from "esbuild";
+import manifestPlugin from "esbuild-plugin-manifest";
 
-const build = async (entryPoints: string[]) => {
+export const build = async (entryPoints: string[]) => {
   const result = await esbuild.build({
     entryPoints: entryPoints,
-    entryNames: "[dir]/[name]-[hash]",
-    // stdin: {
-    //   // contents: `export * from "./another-file"`,
-
-    //   // These are all optional:
-    //   resolveDir: "./src",
-    //   sourcefile: "support/entry-client.jsx",
-    //   // loader: "ts",
-    // },
+    entryNames: "[dir]/entry-client-[name]-[hash]",
+    chunkNames: "chunks/[name]-[hash]",
+    assetNames: "assets/[name]-[hash]",
     bundle: true,
+    jsx: "automatic",
     // banner: {
     //   js: '//comment',
     //   css: '/*comment*/',
@@ -21,11 +17,12 @@ const build = async (entryPoints: string[]) => {
     format: "esm",
     minify: false,
     sourcemap: true,
-    loader: { ".png": "dataurl", ".svg": "file" },
-    //   target: ['chrome58', 'firefox57', 'safari11', 'edge16'],
+    loader: { ".png": "dataurl", ".svg": "file" }, // TODO: Improve the loader, the generated path doesn't work
+    // publicPath: '/public',
+    // target: ['chrome58', 'firefox57', 'safari11', 'edge16'],
     color: true,
+    outbase: "temp-build/src/fragments",
     outdir: "out",
+    plugins: [manifestPlugin()],
   });
 };
-
-export default build;

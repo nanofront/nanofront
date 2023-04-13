@@ -23,16 +23,31 @@ export async function addCodeSupport(directory: string) {
 
             const entryPointName = path.join(
               clientDir,
-              `entry-client-${path.basename(fullPath)}`
+              path.basename(fullPath)
             );
-            fs.writeFileSync(
-              entryPointName,
-              `import ReactDOM from "react-dom";
-            import NanoFragment from "../${file}";
-            
-            ReactDOM.hydrate(<NanoFragment />, document.getElementById("${path
+
+            const fragmentName = path
               .basename(fullPath)
-              .replace(/\.[^.]*$/, "")}"));
+              .replace(/\.[^.]*$/, "");
+
+            const nameFormatted = fragmentName
+              .replace(/-/g, "_")
+              .replace(/([A-Z])/g, "_$1")
+              .toUpperCase();
+
+            fs.writeFileSync( // TODO: Improve with the use of nunjucks lib
+              entryPointName,
+              `import { hydrateRoot } from 'react-dom/client';
+            import { renderToString } from "react-dom/server";
+            import NanoFragment from "../${file}";
+
+            if (typeof window !== 'undefined') {
+              // @ts-ignore
+              const props = ${nameFormatted}_PROPS;
+              hydrateRoot(document.getElementById("${fragmentName}"), <NanoFragment props={props} />);
+            }
+
+            export const SSR = (ssrProps) => renderToString(<NanoFragment props={ssrProps} />);
             `
             );
             console.log("asd");

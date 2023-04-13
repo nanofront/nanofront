@@ -1,6 +1,8 @@
+import express from "express";
+import cors from "cors";
 import chalk from "chalk";
 import Listr from "listr";
-import path, { join, resolve } from "path";
+import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 
@@ -8,36 +10,30 @@ import type { Args } from "../types";
 
 import { parseArgumentsIntoOptions } from "./parse-arguments-into-options";
 import { promptForMissingOptions } from "./prompt-for-missing-options";
-import { build } from "./build-with-esbuild";
-import { createTemp } from "./create-temp";
-import { addCodeSupport } from "./add-code-support";
-import { removeDir } from "./remove-dir";
+import { listFragments } from "./list-fragments";
+import { startFragment } from "./start-fragment";
 
-export async function buildProject(optionsArg: Args) {
+const app = express();
+
+export async function runProject(optionsArg: Args) {
   const rawOptions = parseArgumentsIntoOptions(optionsArg);
   const options = await promptForMissingOptions(rawOptions);
 
   const targetDirectory = process.cwd();
   console.log("targetDirectory: ", targetDirectory);
-  const targetSubDir = resolve(targetDirectory, "temp-build");
 
   const currentFileUrl = decodeURI(fileURLToPath(import.meta.url));
   console.log("currentFileUrl: ", currentFileUrl);
 
-  console.log("before createTemp");
-  await createTemp(targetDirectory, targetSubDir);
-  console.log("createTemp");
-  const entryPoints = await addCodeSupport(
-    join(targetSubDir, "src", "fragments")
+  const fragments = await listFragments(
+    path.join(targetDirectory, "src", "fragments")
   );
-  
-  removeDir(resolve(targetDirectory, "out"));
-  await build(entryPoints);
-  removeDir(targetSubDir);
+
+  runServer(fragments);
 
   const tasks = new Listr([
     {
-      title: "Initialize git",
+      title: "Running",
       task: () => {},
       enabled: () => options.foo,
     },
@@ -51,3 +47,24 @@ export async function buildProject(optionsArg: Args) {
     console.log("%s Error occurred", chalk.red.bold("ERROR"));
   }
 }
+
+const runServer = (fragments: { [id: string]: string }) => {
+  const PORT = 3030;
+
+  app.use(
+    cors({
+      origin: "*",
+      optionsSuccessStatus: 200,
+    })
+  );
+
+  for (const fragKey in fragments) {
+    const fragValue = fragments[fragKey];
+    console.log(fragKey + ": " + fragValue);
+    app.use(`/${fragKey}`, startFragment(fragKey, fragValue));
+  }
+
+  app.use(`/public`, express.static(path.join(process.cwd(), "out")));
+
+  app.listen(PORT, () => console.log(`MFF listening on port ${PORT}!`));
+};

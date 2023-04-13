@@ -1,5 +1,6 @@
 import { buildProject } from "./build/main";
 import { createProject } from "./create/main";
+import { debugProject } from "./debug/main";
 import { runProject } from "./run/main";
 
 import type { Args } from "./types";
@@ -12,6 +13,7 @@ export async function cli(args: Args) {
       break;
     case "debug":
       console.log("debug");
+      await debugProject(optionsArg);
       break;
     case "build":
       console.log("build");

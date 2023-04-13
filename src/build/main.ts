@@ -35,7 +35,7 @@ export async function buildProject(optionsArg: Args) {
   await build(entryPoints);
   removeDir(targetSubDir);
 
-  const tasks = new Listr([
+  const tasks = new Listr([ // TODO: agregar la ejecución de cada función aqui
     {
       title: "Initialize git",
       task: () => {},

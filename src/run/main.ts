@@ -29,9 +29,10 @@ export async function runProject(optionsArg: Args) {
     path.join(targetDirectory, "src", "fragments")
   );
 
-  runServer(fragments);
+  const server = runServer(fragments);
 
   const tasks = new Listr([
+    // TODO: agregar la ejecución de cada función aqui
     {
       title: "Running",
       task: () => {},
@@ -42,14 +43,22 @@ export async function runProject(optionsArg: Args) {
   try {
     await tasks.run();
 
-    console.log("%s Project built", chalk.green.bold("DONE"));
+    console.log("%s Project run", chalk.green.bold("DONE"));
   } catch (error) {
     console.log("%s Error occurred", chalk.red.bold("ERROR"));
   }
+  return server;
 }
 
 const runServer = (fragments: { [id: string]: string }) => {
+  // TODO: Relocate this function
   const PORT = 3030;
+
+  app._router?.stack?.forEach((middleware: any, index: any) => {
+    if (middleware.route) {
+      app._router.stack.splice(index, 1);
+    }
+  });
 
   app.use(
     cors({
@@ -58,13 +67,37 @@ const runServer = (fragments: { [id: string]: string }) => {
     })
   );
 
-  for (const fragKey in fragments) {
-    const fragValue = fragments[fragKey];
-    console.log(fragKey + ": " + fragValue);
-    app.use(`/${fragKey}`, startFragment(fragKey, fragValue));
-  }
+  let router: any = undefined;
+  // this should be the only thing on your app
+  app.use(function (req, res, next) {
+    // this needs to be a function to hook on whatever the current router is
+    router(req, res, next);
+  });
 
-  app.use(`/public`, express.static(path.join(process.cwd(), "out")));
+  const defineStuff = () => {
+    router = express.Router();
 
-  app.listen(PORT, () => console.log(`MFF listening on port ${PORT}!`));
+    // define everything on _router_, not _app_
+    for (const fragKey in fragments) {
+      const fragValue = fragments[fragKey];
+      console.log(fragKey + ": " + fragValue);
+      router.use(`/${fragKey}`, startFragment(fragKey, fragValue));
+    }
+
+    router.use(`/public`, express.static(path.join(process.cwd(), "out")));
+  };
+
+  defineStuff();
+
+  const server = app.listen(PORT, () =>
+    console.log(`MFF listening on port ${PORT}!`)
+  );
+
+  // server.on("close", () => {
+  //   console.log("closing server");
+  //   delete app._router.map.get;
+  //   app._router.map.get = [];
+  //   console.log("removed routes");
+  // });
+  return defineStuff;
 };

@@ -58,7 +58,8 @@ export function startFragment(fragmentName: string, fragmentPath: string) {
     referrerPolicy: "",
   };
 
-  if (IS_DEVELOPMENT) { // TODO: Make CSS and JS customizable from developer
+  if (IS_DEVELOPMENT) {
+    // TODO: Make CSS and JS customizable from developer
     podlet.css([
       {
         value: `https://d1uanze3ra4w37.cloudfront.net/presets/olive.css`,
@@ -67,7 +68,8 @@ export function startFragment(fragmentName: string, fragmentPath: string) {
     ]);
   }
 
-  glob(path.join("out", "client", "entry-client-index-*.css")).then((files) => { // TODO: Improve this, I dont like this lib
+  glob(path.join("out", "client", "entry-client-index-*.css")).then((files) => {
+    // TODO: Improve this, I dont like this lib
     if (files.length === 1) {
       const filepathCSS = files[0];
       console.log(filepathCSS);

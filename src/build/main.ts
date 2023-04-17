@@ -27,9 +27,14 @@ export async function buildProject(optionsArg: Args) {
   console.log("before createTemp");
   await createTemp(targetDirectory, targetSubDir);
   console.log("createTemp");
-  const entryPoints = await addCodeSupport(
+  const fragEntryPoints = await addCodeSupport(
     join(targetSubDir, "src", "fragments")
   );
+  const PagEntryPoints = await addCodeSupport(
+    join(targetSubDir, "src", "pages")
+  );
+
+  const entryPoints = [...fragEntryPoints, ...PagEntryPoints];
   
   removeDir(resolve(targetDirectory, "out"));
   await build(entryPoints);

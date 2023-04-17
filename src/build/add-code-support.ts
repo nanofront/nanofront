@@ -35,7 +35,8 @@ export async function addCodeSupport(directory: string) {
               .replace(/([A-Z])/g, "_$1")
               .toUpperCase();
 
-            fs.writeFileSync( // TODO: Improve with the use of nunjucks lib
+            fs.writeFileSync(
+              // TODO: Improve with the use of nunjucks lib
               entryPointName,
               `import { hydrateRoot } from 'react-dom/client';
             import { renderToString } from "react-dom/server";
@@ -43,14 +44,14 @@ export async function addCodeSupport(directory: string) {
 
             if (typeof window !== 'undefined') {
               // @ts-ignore
-              const props = ${nameFormatted}_PROPS;
+              const props = JSON.parse(atob(${nameFormatted}_PROPS));
+              console.log("props: ", props);
               hydrateRoot(document.getElementById("${fragmentName}"), <NanoFragment props={props} />);
             }
 
             export const SSR = (ssrProps) => renderToString(<NanoFragment props={ssrProps} />);
             `
             );
-            console.log("asd");
             return entryPointName;
           }
 

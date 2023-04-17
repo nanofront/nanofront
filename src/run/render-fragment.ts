@@ -4,7 +4,8 @@ import { resolve } from "path";
 export const renderFragment = async (
   fragmentName: string,
   fragmentPath: string,
-  text: string
+  props: {},
+  podlets?: { name: string; html: string }[]
 ) => {
   console.log("renderFragment");
   const nameFormatted = fragmentName
@@ -24,15 +25,27 @@ export const renderFragment = async (
   // TODO: Execute server side logic
 
   const FRAGMENT_PROPS = {
-    text,
+    text: "Demo",
+    ...props,
+    podlets,
   };
 
   const html = SSR(FRAGMENT_PROPS);
   console.log(html);
 
+  const propsBuf = Buffer.from(JSON.stringify(FRAGMENT_PROPS));
+  console.log("propsBuf: " + propsBuf.toString("base64"));
+  const asd = `
+  <script>
+    ${nameFormatted}_PROPS = "${propsBuf.toString("base64")}";
+  </script>
+  <div id="${fragmentName}">${html}</div>
+`;
+  console.log(asd);
+
   return `
       <script>
-        ${nameFormatted}_PROPS = ${JSON.stringify(FRAGMENT_PROPS)};
+        ${nameFormatted}_PROPS = "${propsBuf.toString("base64")}";
       </script>
       <div id="${fragmentName}">${html}</div>
     `;

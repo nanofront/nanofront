@@ -1,0 +1,12 @@
+[
+  {
+    "name": "about",
+    "uri": "http://localhost:3030/about/manifest.json",
+    "throwable": false
+  },
+  {
+    "name": "react",
+    "uri": "http://localhost:3030/react/manifest.json",
+    "throwable": false
+  }
+]

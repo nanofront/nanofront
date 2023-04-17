@@ -21,7 +21,7 @@ export const build = async (entryPoints: string[]) => {
     // publicPath: '/public',
     // target: ['chrome58', 'firefox57', 'safari11', 'edge16'],
     color: true,
-    outbase: "temp-build/src/fragments",
+    outbase: `temp-build/src`,
     outdir: "out",
     plugins: [manifestPlugin()],
   });

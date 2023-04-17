@@ -3,7 +3,6 @@ import cors from "cors";
 import chalk from "chalk";
 import Listr from "listr";
 import path from "path";
-import fs from "fs";
 import { fileURLToPath } from "url";
 
 import type { Args } from "../types";
@@ -12,6 +11,8 @@ import { parseArgumentsIntoOptions } from "./parse-arguments-into-options";
 import { promptForMissingOptions } from "./prompt-for-missing-options";
 import { listFragments } from "./list-fragments";
 import { startFragment } from "./start-fragment";
+import { startPage } from "./start-page";
+import { RunOptions } from "./types";
 
 const app = express();
 
@@ -29,7 +30,9 @@ export async function runProject(optionsArg: Args) {
     path.join(targetDirectory, "src", "fragments")
   );
 
-  const server = runServer(fragments);
+  const pages = await listFragments(path.join(targetDirectory, "src", "pages"));
+
+  const server = runServer(fragments, pages, options);
 
   const tasks = new Listr([
     // TODO: agregar la ejecución de cada función aqui
@@ -50,9 +53,14 @@ export async function runProject(optionsArg: Args) {
   return server;
 }
 
-const runServer = (fragments: { [id: string]: string }) => {
-  // TODO: Relocate this function
-  const PORT = 3030;
+type Dictionary = { [id: string]: string }; // TODO: Convert all { [id: string]: string } in this type
+// TODO: Relocate this function
+const runServer = (
+  fragments: Dictionary,
+  pages: Dictionary,
+  options: RunOptions
+) => {
+  const PORT = options.port;
 
   app._router?.stack?.forEach((middleware: any, index: any) => {
     if (middleware.route) {
@@ -68,36 +76,36 @@ const runServer = (fragments: { [id: string]: string }) => {
   );
 
   let router: any = undefined;
-  // this should be the only thing on your app
   app.use(function (req, res, next) {
-    // this needs to be a function to hook on whatever the current router is
     router(req, res, next);
   });
 
+  // TODO: This is for allowing the restart of the server, find a better way
   const defineStuff = () => {
     router = express.Router();
 
-    // define everything on _router_, not _app_
     for (const fragKey in fragments) {
+      console.log("Fragments");
       const fragValue = fragments[fragKey];
       console.log(fragKey + ": " + fragValue);
-      router.use(`/${fragKey}`, startFragment(fragKey, fragValue));
+      router.use(`/${fragKey}`, startFragment(fragKey, fragValue, options));
     }
 
-    router.use(`/public`, express.static(path.join(process.cwd(), "out")));
+    for (const pagKey in pages) {
+      console.log("Pages");
+      const pagValue = pages[pagKey];
+      console.log(pagKey + ": " + pagValue);
+      router.use(`/${pagKey}`, startPage(pagKey, pagValue, options));
+    }
+
+    router.use(`/`, express.static(path.join(process.cwd(), "out"))); // TODO: Fix assets routes
   };
 
   defineStuff();
 
   const server = app.listen(PORT, () =>
-    console.log(`MFF listening on port ${PORT}!`)
+    console.log(`Microfrontends listening on port ${PORT}!`)
   );
 
-  // server.on("close", () => {
-  //   console.log("closing server");
-  //   delete app._router.map.get;
-  //   app._router.map.get = [];
-  //   console.log("removed routes");
-  // });
   return defineStuff;
 };

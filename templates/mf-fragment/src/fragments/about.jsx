@@ -3,7 +3,7 @@ import Counter from "../components/Counter";
 export default function About() {
   return (
     <div>
-      <h1>About page</h1>
+      <span>About page</span>
       <Counter></Counter>
     </div>
   );

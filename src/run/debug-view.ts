@@ -5,7 +5,7 @@ export const templateView = (incoming: HttpIncoming, fragment: string) => `
   <html lang="${incoming.context.locale}">
   <head>
       <meta charset="${incoming.view.encoding}">
-      <title>MFF-PersonalInfo</title>
+      <title>${incoming.view.title}</title>
       ${incoming.css.map((css) => css.toHTML()).join("\n")}
   </head>
   <body>

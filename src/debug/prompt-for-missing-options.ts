@@ -1,18 +1,17 @@
-import inquirer from "inquirer";
+import inquirer, { QuestionCollection } from "inquirer";
 
-import type { BuildOptions } from "./types";
+import type { DebugOptions } from "./types";
 
 // default values for unspecified args
-const defaultOptions: BuildOptions = {
+const defaultOptions: DebugOptions = {
   foo: false,
+  port: 3030,
+  debug: false,
 };
 
 export async function promptForMissingOptions(
-  options: BuildOptions
-): Promise<BuildOptions> {
-  // if (options.skipPrompts) {
-  //   options = { ...options, ...defaultOptions };
-  // }
+  options: DebugOptions
+): Promise<DebugOptions> {
 
   const questions = [];
 
@@ -29,5 +28,7 @@ export async function promptForMissingOptions(
 
   return {
     foo: options.foo || answers.foo,
+    port: options.port || answers.port,
+    debug: options.debug || answers.debug,
   };
 }

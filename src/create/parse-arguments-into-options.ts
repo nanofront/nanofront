@@ -10,14 +10,13 @@ export function parseArgumentsIntoOptions(rawArgs: Args): CreateOptions {
     "--yes": Boolean,
     "--install": Boolean,
     "-pn": "--project-name",
-    "-df": "--data-file",
     "-g": "--git",
     "-y": "--yes",
     "-i": "--install",
   };
 
   const args = arg(options, {
-    argv: rawArgs.slice(2),
+    argv: rawArgs,
     permissive: false,
     stopAtPositional: false,
   });

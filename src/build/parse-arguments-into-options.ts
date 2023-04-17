@@ -10,8 +10,8 @@ export function parseArgumentsIntoOptions(rawArgs: Args): BuildOptions {
   };
 
   const args = arg(options, {
-    argv: rawArgs.slice(2),
-    permissive: false,
+    argv: rawArgs,
+    permissive: true,
   });
 
   return {

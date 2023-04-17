@@ -1,0 +1,10 @@
+.center-and-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.center-and-column > div {
+  border: 5px solid red;
+  margin: 30px;
+}

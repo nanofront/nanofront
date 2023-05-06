@@ -24,6 +24,6 @@ export async function cli(args: Args) {
       runProject(optionsArg);
       break;
     default:
-      console.log("not command found");
+      console.log("Command not found");
   }
 }

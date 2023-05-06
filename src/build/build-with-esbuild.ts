@@ -15,8 +15,8 @@ export const build = async (entryPoints: string[]) => {
     // },
     splitting: true,
     format: "esm",
-    minify: false,
-    sourcemap: true,
+    minify: true,
+    sourcemap: false,
     loader: { ".png": "dataurl", ".svg": "file" }, // TODO: Improve the loader, the generated path doesn't work
     // publicPath: '/public',
     // target: ['chrome58', 'firefox57', 'safari11', 'edge16'],

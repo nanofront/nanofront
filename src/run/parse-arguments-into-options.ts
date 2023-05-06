@@ -5,7 +5,6 @@ import type { RunOptions } from "./types";
 
 export function parseArgumentsIntoOptions(rawArgs: Args): RunOptions {
   const options = {
-    "--foo": Boolean,
     "--port": Number,
     "--debug": Boolean,
     "-f": "--foo",
@@ -19,7 +18,6 @@ export function parseArgumentsIntoOptions(rawArgs: Args): RunOptions {
   });
 
   return {
-    foo: !!args["--foo"],
     port: args["--port"] || 3030,
     debug: !!args["--debug"],
   };

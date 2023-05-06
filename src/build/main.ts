@@ -1,21 +1,17 @@
 import chalk from "chalk";
 import Listr from "listr";
-import path, { join, resolve } from "path";
-import fs from "fs";
+import { join, resolve } from "path";
 import { fileURLToPath } from "url";
 
 import type { Args } from "../types";
-
 import { parseArgumentsIntoOptions } from "./parse-arguments-into-options";
-import { promptForMissingOptions } from "./prompt-for-missing-options";
 import { build } from "./build-with-esbuild";
 import { createTemp } from "./create-temp";
 import { addCodeSupport } from "./add-code-support";
 import { removeDir } from "./remove-dir";
 
 export async function buildProject(optionsArg: Args) {
-  const rawOptions = parseArgumentsIntoOptions(optionsArg);
-  const options = await promptForMissingOptions(rawOptions);
+  const options = parseArgumentsIntoOptions(optionsArg);
 
   const targetDirectory = process.cwd();
   console.log("targetDirectory: ", targetDirectory);
@@ -42,7 +38,7 @@ export async function buildProject(optionsArg: Args) {
 
   const tasks = new Listr([ // TODO: agregar la ejecución de cada función aqui
     {
-      title: "Initialize git",
+      title: "Foo",
       task: () => {},
       enabled: () => options.foo,
     },

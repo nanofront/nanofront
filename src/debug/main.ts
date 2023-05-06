@@ -1,19 +1,16 @@
 import chalk from "chalk";
 import Listr from "listr";
-import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 
 import type { Args } from "../types";
 
 import { parseArgumentsIntoOptions } from "./parse-arguments-into-options";
-import { promptForMissingOptions } from "./prompt-for-missing-options";
 import { buildProject } from "../build/main";
 import { runProject } from "../run/main";
 
 export async function debugProject(optionsArg: Args) {
-  const rawOptions = parseArgumentsIntoOptions(optionsArg);
-  const options = await promptForMissingOptions(rawOptions);
+  const options = parseArgumentsIntoOptions(optionsArg);
 
   const targetDirectory = process.cwd();
   console.log("targetDirectory: ", targetDirectory);
@@ -46,7 +43,7 @@ export async function debugProject(optionsArg: Args) {
   const tasks = new Listr([
     // TODO: agregar la ejecución de cada función aqui
     {
-      title: "Running",
+      title: "Foo",
       task: () => {},
       enabled: () => options.foo,
     },

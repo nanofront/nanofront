@@ -1,5 +1,4 @@
 import { resolve } from "path";
-// import PersonalInfoForm from "src/fragments/PersonalInfoForm/fragment";
 
 export const renderFragment = async (
   fragmentName: string,
@@ -7,20 +6,19 @@ export const renderFragment = async (
   props: {},
   podlets?: { name: string; html: string }[]
 ) => {
-  console.log("renderFragment");
+  // console.log("renderFragment");
   const nameFormatted = fragmentName
     .replace(/-/g, "_")
-
     .replace(/([A-Z])/g, "_$1")
     .toUpperCase();
 
-  console.log("process.cwd(): " + process.cwd());
-  console.log("fragmentPath: " + fragmentPath);
+  // console.log("process.cwd(): " + process.cwd());
+  // console.log("fragmentPath: " + fragmentPath);
   const fullPath = resolve(process.cwd(), fragmentPath);
-  console.log("fullPath: " + fullPath);
+  // console.log("fullPath: " + fullPath);
 
   const { SSR } = await import(fullPath);
-  console.log(SSR);
+  // console.log(SSR);
 
   // TODO: Execute server side logic
 
@@ -31,17 +29,17 @@ export const renderFragment = async (
   };
 
   const html = SSR(FRAGMENT_PROPS);
-  console.log(html);
+  // console.log(html);
 
   const propsBuf = Buffer.from(JSON.stringify(FRAGMENT_PROPS));
-  console.log("propsBuf: " + propsBuf.toString("base64"));
+  // console.log("propsBuf: " + propsBuf.toString("base64"));
   const asd = `
   <script>
     ${nameFormatted}_PROPS = "${propsBuf.toString("base64")}";
   </script>
   <div id="${fragmentName}">${html}</div>
 `;
-  console.log(asd);
+  // console.log(asd);
 
   return `
       <script>

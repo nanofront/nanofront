@@ -1,7 +1,6 @@
 import chalk from "chalk";
 import Listr from "listr";
 import path from "path";
-import fs from "fs";
 import { fileURLToPath } from "url";
 
 import { copyTemplateFiles } from "./copy-template-files";
@@ -38,15 +37,15 @@ export async function createProject(optionsArg: Args) {
       task: () => initGitRepo(targetDirectory),
       enabled: () => options.git,
     },
-    // {
-    //   title: "Install dependencies",
-    //   task: () => installPackages(targetDirectory),
-    //   skip: () => {
-    //     if (!options.install) {
-    //       return "Pass --install or -i to automatically install dependencies";
-    //     }
-    //   },
-    // },
+    {
+      title: "Install dependencies",
+      task: () => installPackages(targetDirectory),
+      skip: () => {
+        if (!options.install) {
+          return "Pass --install or -i to automatically install dependencies";
+        }
+      },
+    },
   ]);
 
   try {

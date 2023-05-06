@@ -8,7 +8,6 @@ import { fileURLToPath } from "url";
 import type { Args } from "../types";
 
 import { parseArgumentsIntoOptions } from "./parse-arguments-into-options";
-import { promptForMissingOptions } from "./prompt-for-missing-options";
 import { listFragments } from "./list-fragments";
 import { startFragment } from "./start-fragment";
 import { startPage } from "./start-page";
@@ -17,8 +16,7 @@ import { RunOptions } from "./types";
 const app = express();
 
 export async function runProject(optionsArg: Args) {
-  const rawOptions = parseArgumentsIntoOptions(optionsArg);
-  const options = await promptForMissingOptions(rawOptions);
+  const options = parseArgumentsIntoOptions(optionsArg);
 
   const targetDirectory = process.cwd();
   console.log("targetDirectory: ", targetDirectory);
@@ -37,9 +35,9 @@ export async function runProject(optionsArg: Args) {
   const tasks = new Listr([
     // TODO: agregar la ejecución de cada función aqui
     {
-      title: "Running",
+      title: "Foo",
       task: () => {},
-      enabled: () => options.foo,
+      enabled: () => options.debug,
     },
   ]);
 

@@ -21,6 +21,7 @@ export default [
       peerDepsExternal(),
       // resolve(),
       // commonjs(),
+      json(),
       typescript({ tsconfig: "./tsconfig-nontypes.json" }),
       postcss(),
       // terser(),

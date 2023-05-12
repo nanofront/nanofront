@@ -2,6 +2,7 @@ import { buildProject } from "./build/main";
 import { createProject } from "./create/main";
 import { debugProject } from "./debug/main";
 import { runProject } from "./run/main";
+import packageJson from "../package.json";
 
 import type { Args } from "./types";
 
@@ -22,6 +23,10 @@ export async function cli(args: Args) {
     case "run":
       console.log("run");
       runProject(optionsArg);
+      break;
+    case "-v":
+    case "--version":
+      console.log("Nanofragmet CLI v" + packageJson.version);
       break;
     default:
       console.log("Command not found");
